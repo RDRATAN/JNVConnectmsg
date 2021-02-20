@@ -151,7 +151,8 @@ export const isLoggedInUser = () => {
 }
 
 export const logout = (uid) => {
-    return async dispatch => {
+   if( window.confirm('Are you sure to checkout? Once you checkout, you will be detached with the chat bucket and we will ask you to login again next time and your Status will mark as Offline untill your Next login')
+   ){ return async dispatch => {
         dispatch({ type: `${authConstanst.USER_LOGOUT}_REQUEST` });
         //Now lets logout user
 
@@ -182,7 +183,27 @@ export const logout = (uid) => {
 
         
 
+    }
+    }
+    else{
+        return async dispatch => {
 
+            const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+    
+            if(user){
+                dispatch({
+                    type: `${authConstanst.USER_LOGIN}_SUCCESS`,
+                    payload: { user }
+                });
+            }else{
+                dispatch({
+                    type: `${authConstanst.USER_LOGIN}_FAILURE`,
+                    payload: { error: 'Login again please' }
+                });
+            }
+    
+    
+        }
     }
 }
 
